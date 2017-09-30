@@ -1,18 +1,19 @@
 import pygame
 
-class Ship():
+
+class Ship:
 
     def __init__(self, screen, game_settings):
         """"Initialise the ship and set its starting position."""
         self.screen = screen
         self.game_settings = game_settings
 
-        #Load the ship image and get its rect.
+        # Load the ship image and get its rect.
         self.image = pygame.image.load('ship.png')
         self.rect = self.image.get_rect()
         self.screen_rect = screen.get_rect()
 
-        #Start each new ship at the centre of the screen.
+        # Start each new ship at the centre of the screen.
         self.rect.centerx = self.screen_rect.centerx
         self.rect.centery = self.screen_rect.centery
 
