@@ -41,7 +41,7 @@ def check_keyup_events(event, ship):
         ship.is_moving_down = False
 
 
-def update_screen(game_settings, screen, ship, bullets):
+def update_screen(game_settings, screen, ship, bullets, alien):
     """"Update images on the screen and flip to the new screen."""
 
     # Redraw the screen during each pass through the loop.
@@ -52,6 +52,7 @@ def update_screen(game_settings, screen, ship, bullets):
         bullet.draw_bullet()
 
     ship.blitme()
+    alien.blitme()
 
     # Make the most recently drawn screen visible.
     pygame.display.flip()
