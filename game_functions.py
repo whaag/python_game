@@ -2,6 +2,7 @@ import sys
 import pygame
 
 from bullet import Bullet
+from alien import Alien
 
 
 def check_events(ship, game_settings, screen, bullets):
@@ -41,7 +42,7 @@ def check_keyup_events(event, ship):
         ship.is_moving_down = False
 
 
-def update_screen(game_settings, screen, ship, bullets):
+def update_screen(game_settings, screen, ship, bullets, aliens):
     """"Update images on the screen and flip to the new screen."""
 
     # Redraw the screen during each pass through the loop.
@@ -52,6 +53,7 @@ def update_screen(game_settings, screen, ship, bullets):
         bullet.draw_bullet()
 
     ship.blitme()
+    aliens.draw(screen)
 
     # Make the most recently drawn screen visible.
     pygame.display.flip()
@@ -73,3 +75,21 @@ def update_bullets(bullets):
     for bullet in bullets.copy():
         if bullet.rect.bottom <= 0:
             bullets.remove(bullet)
+
+
+def create_armada(game_settings, screen, aliens):
+    """"Create an alien armada."""
+    # Create an alien and find the number of aliens in a row.
+    # Spacing between each alien is equal to one alien width.
+    alien = Alien(game_settings, screen)
+    alien_width = alien.rect.width
+    available_space_x = game_settings.screen_width - 2 * alien_width
+    number_aliens_x = int(available_space_x / (2 * alien_width))
+
+    # create the first row of aliens
+    for alien_number in range(number_aliens_x):
+        # Create an alien and place it in the row.
+        alien = Alien(game_settings, screen)
+        alien.x = alien_width + 2 * alien_width * alien_number
+        alien.rect.x = alien.x
+        aliens.add(alien)
