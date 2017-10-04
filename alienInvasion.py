@@ -18,12 +18,13 @@ def run_game():
     aliens = Group()
 
     # Create an alien armada
-    gf.create_armada(game_settings, screen, aliens)
+    gf.create_armada(game_settings, screen, aliens, ship)
 
     while True:
         gf.check_events(ship, game_settings, screen, bullets)
         ship.update()
         gf.update_bullets(bullets)
+        gf.update_aliens(aliens)
         gf.update_screen(game_settings, screen, ship, bullets, aliens)
 
 
