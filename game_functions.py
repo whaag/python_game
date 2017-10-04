@@ -77,19 +77,42 @@ def update_bullets(bullets):
             bullets.remove(bullet)
 
 
-def create_armada(game_settings, screen, aliens):
-    """"Create an alien armada."""
-    # Create an alien and find the number of aliens in a row.
-    # Spacing between each alien is equal to one alien width.
-    alien = Alien(game_settings, screen)
-    alien_width = alien.rect.width
+def get_number_aliens_x(game_settings, alien_width):
+    """"Calculate the number of aliens that fit in a row."""
     available_space_x = game_settings.screen_width - 2 * alien_width
     number_aliens_x = int(available_space_x / (2 * alien_width))
+    return number_aliens_x
 
-    # create the first row of aliens
-    for alien_number in range(number_aliens_x):
-        # Create an alien and place it in the row.
-        alien = Alien(game_settings, screen)
-        alien.x = alien_width + 2 * alien_width * alien_number
-        alien.rect.x = alien.x
-        aliens.add(alien)
+
+def create_alien(game_settings, screen,aliens, alien_number, row_number):
+    """"Create an alien and place it in the row."""
+    alien = Alien(game_settings, screen)
+    alien_width = alien.rect.width
+    alien.x = alien_width + 2 * alien_width * alien_number
+    alien.rect.x = alien.x
+    alien.rect.y = alien.rect.height + 2 * alien.rect.height * row_number
+    aliens.add(alien)
+
+
+def create_armada(game_settings, screen, aliens, ship):
+    """"Create an alien armada."""
+    alien = Alien(game_settings, screen)
+    number_aliens_x = get_number_aliens_x(game_settings, alien.rect.width)
+    number_rows = get_number_rows(game_settings, ship.rect.height, alien.rect.height)
+
+    for row_number in range(number_rows):
+        for alien_number in range(number_aliens_x):
+            # Create an alien and place it in the row.
+            create_alien(game_settings, screen, aliens, alien_number, row_number)
+
+
+def get_number_rows(game_settings, ship_height, alien_heigt):
+    """"Determine the number of rows of aliens that fit on the secreen."""
+    available_spcae_y = (game_settings.screen_height - (3 * alien_heigt) - ship_height)
+    number_rows = int(available_spcae_y / (2 * alien_heigt))
+    return number_rows
+
+
+def update_aliens(aliens):
+    """"Update the positions of the aliens in the armada."""
+    aliens.update()
