@@ -67,7 +67,7 @@ def fire_bullet(game_settings, screen, ship, bullets):
         bullets.add(new_bullet)
 
 
-def update_bullets(bullets):
+def update_bullets(bullets, aliens):
     """"Update bullets position's and get rid of old ones."""
     bullets.update()
 
@@ -75,6 +75,10 @@ def update_bullets(bullets):
     for bullet in bullets.copy():
         if bullet.rect.bottom <= 0:
             bullets.remove(bullet)
+
+    # Check for any bullets that have hit aliens.
+    # If so, get rid of the bullet and the alien.
+    collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
 
 
 def get_number_aliens_x(game_settings, alien_width):
@@ -113,6 +117,22 @@ def get_number_rows(game_settings, ship_height, alien_heigt):
     return number_rows
 
 
-def update_aliens(aliens):
+def update_aliens(aliens, game_settings):
     """"Update the positions of the aliens in the armada."""
+    check_armada_edges(game_settings, aliens)
     aliens.update()
+
+
+def change_armada_direction(game_settings, aliens):
+    """"Drop the entire armada and change its direction."""
+    for alien in aliens.sprites():
+        alien.rect.y += game_settings.armada_drop_speed
+    game_settings.armada_direction *= -1
+
+
+def check_armada_edges(game_settings, aliens):
+    """"Respond appropriately if any aliens have reached an edge."""
+    for alien in aliens.sprites():
+        if alien.check_edges():
+            change_armada_direction(game_settings, aliens)
+            break
