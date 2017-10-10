@@ -6,7 +6,7 @@ from alien import Alien
 
 
 def check_events(ship, game_settings, screen, bullets):
-    """"Respond to keypresses and mouse events."""
+    """"Respond to keypress and mouse events."""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
@@ -67,7 +67,19 @@ def fire_bullet(game_settings, screen, ship, bullets):
         bullets.add(new_bullet)
 
 
-def update_bullets(bullets, aliens):
+def check_bullet_alien_collision(game_settings, screen, ship, aliens, bullets):
+    # Check for any bullets that have hit aliens.
+    # If so, get rid of the bullet and the alien.
+    collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
+
+    if len(aliens) == 0:
+        # Destroy existing bullets and create new armada.
+        bullets.empty()
+        game_settings.alien_speed_factor += 0.5
+        create_armada(game_settings, screen, aliens, ship)
+
+
+def update_bullets(bullets, aliens, ship, game_settings, screen):
     """"Update bullets position's and get rid of old ones."""
     bullets.update()
 
@@ -76,9 +88,7 @@ def update_bullets(bullets, aliens):
         if bullet.rect.bottom <= 0:
             bullets.remove(bullet)
 
-    # Check for any bullets that have hit aliens.
-    # If so, get rid of the bullet and the alien.
-    collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
+    check_bullet_alien_collision(game_settings, screen, ship, aliens, bullets)
 
 
 def get_number_aliens_x(game_settings, alien_width):
@@ -88,7 +98,7 @@ def get_number_aliens_x(game_settings, alien_width):
     return number_aliens_x
 
 
-def create_alien(game_settings, screen,aliens, alien_number, row_number):
+def create_alien(game_settings, screen, aliens, alien_number, row_number):
     """"Create an alien and place it in the row."""
     alien = Alien(game_settings, screen)
     alien_width = alien.rect.width
