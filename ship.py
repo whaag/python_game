@@ -1,20 +1,22 @@
 import pygame
 
-class Ship():
+
+class Ship:
 
     def __init__(self, screen, game_settings):
         """"Initialise the ship and set its starting position."""
         self.screen = screen
         self.game_settings = game_settings
 
-        #Load the ship image and get its rect.
+        # Load the ship image and get its rect.
         self.image = pygame.image.load('ship.png')
         self.rect = self.image.get_rect()
         self.screen_rect = screen.get_rect()
 
-        #Start each new ship at the centre of the screen.
+        # Start each new ship at the centre/ bottom of the screen.
         self.rect.centerx = self.screen_rect.centerx
-        self.rect.centery = self.screen_rect.centery
+        #self.rect.centery = self.screen_rect.centery - this would be centre
+        self.rect.bottom = self.screen_rect.bottom
 
         # Store a decimal value for the ship's centre
         self.x_axis = float(self.rect.centerx)
@@ -43,3 +45,7 @@ class Ship():
     def blitme(self):
         """"Draw the ship at its current location."""
         self.screen.blit(self.image, self.rect)
+
+    def center_ship(self):
+        """"Centres the ship on the screen."""
+        self.center = self.screen_rect.centerx
