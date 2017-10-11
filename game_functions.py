@@ -3,6 +3,7 @@ import pygame
 
 from bullet import Bullet
 from alien import Alien
+from time import sleep
 
 
 def check_events(ship, game_settings, screen, bullets):
@@ -127,10 +128,17 @@ def get_number_rows(game_settings, ship_height, alien_heigt):
     return number_rows
 
 
-def update_aliens(aliens, game_settings):
+def update_aliens(aliens, game_settings, ship, stats, screen, bullets):
     """"Update the positions of the aliens in the armada."""
     check_armada_edges(game_settings, aliens)
     aliens.update()
+
+    # Look for alien-ship collisions.
+    if pygame.sprite.spritecollideany(ship, aliens):
+        ship_hit(game_settings, stats, screen, ship, aliens, bullets)
+
+    # Look for aliens hitting the bottom of the screen.
+    check_aliens_bottom(game_settings, stats, screen, ship, aliens, bullets)
 
 
 def change_armada_direction(game_settings, aliens):
@@ -145,4 +153,38 @@ def check_armada_edges(game_settings, aliens):
     for alien in aliens.sprites():
         if alien.check_edges():
             change_armada_direction(game_settings, aliens)
+            break
+
+
+def ship_hit(game_settings, stats, screen, ship, aliens, bullets):
+    """"Respond to ship being hit by an alien."""
+    if stats.ships_left > 0:
+        # Decrements ships_left.
+        stats.ships_left -= 1
+
+        # Resets the armada speed to default
+        game_settings.alien_speed_factor = 1
+
+        # Empty the list of aliens and bullets.
+        aliens.empty()
+        bullets.empty()
+
+        # Create a new armada and center the ship.
+        create_armada(game_settings,screen,aliens,ship)
+        ship.center_ship()
+
+        # Pause
+        sleep(0.5)
+
+    else:
+        stats.pilot_alive = False
+
+
+def check_aliens_bottom(game_settings, stats, screen, ship, aliens, bullets):
+    """"Check if any aliens have reached the bottom of the screen."""
+    screen_rect = screen.get_rect()
+    for alien in aliens.sprites():
+        if alien.rect.bottom >= screen_rect.bottom:
+            # Treat this the same as if the ship got hit.
+            ship_hit(game_settings, stats, screen, ship, aliens, bullets)
             break
