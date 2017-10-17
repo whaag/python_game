@@ -6,7 +6,23 @@ from alien import Alien
 from time import sleep
 
 
-def check_events(ship, game_settings, screen, bullets):
+def check_play_button(stats, play_button, mouse_x, mouse_y, aliens, bullets, game_settings, screen, ship):
+    """"Start a new game when the player clicks play."""
+    if play_button.rect.collidepoint(mouse_x, mouse_y):
+        # Reset statistics.
+        stats.reset_stats()
+        stats.pilot_alive = True
+
+        # Empty the list of aliens and bullets.
+        aliens.empty()
+        bullets.empty()
+
+        # Create a new armada and center the ship.
+        create_armada(game_settings, screen, aliens, ship)
+        ship.center_ship()
+
+
+def check_events(ship, game_settings, screen, bullets, stats, play_button, aliens):
     """"Respond to keypress and mouse events."""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -15,6 +31,9 @@ def check_events(ship, game_settings, screen, bullets):
             check_keydown_events(event, ship, game_settings, screen, bullets)
         elif event.type == pygame.KEYUP:
             check_keyup_events(event, ship)
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+            check_play_button(stats, play_button, mouse_x, mouse_y, aliens, bullets, game_settings, screen, ship)
 
 
 def check_keydown_events(event, ship, game_settings, screen, bullets):
@@ -43,7 +62,7 @@ def check_keyup_events(event, ship):
         ship.is_moving_down = False
 
 
-def update_screen(game_settings, screen, ship, bullets, aliens):
+def update_screen(game_settings, screen, ship, bullets, aliens, stats, play_button):
     """"Update images on the screen and flip to the new screen."""
 
     # Redraw the screen during each pass through the loop.
@@ -55,6 +74,10 @@ def update_screen(game_settings, screen, ship, bullets, aliens):
 
     ship.blitme()
     aliens.draw(screen)
+
+    # Draw the play button if the game is inactive.
+    if not stats.pilot_alive:
+        play_button.draw_button()
 
     # Make the most recently drawn screen visible.
     pygame.display.flip()
