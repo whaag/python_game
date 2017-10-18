@@ -24,3 +24,6 @@ class Settings:
         self.armada_drop_speed = 10
         # armada_direction of 1 represents right; -1 left
         self.armada_direction = 1
+
+        # scoring
+        self.alien_points = 50
