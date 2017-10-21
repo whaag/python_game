@@ -8,6 +8,10 @@ class GameStats():
         self.score = 0
         self.reset_stats()
 
+        # Scoring
+        self.high_score = 0
+        self.level = 1
+
         # Start Alien Invasion in an inactive state.
         self.pilot_alive = False
 

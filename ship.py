@@ -1,10 +1,11 @@
 import pygame
+from pygame.sprite import Sprite
 
-
-class Ship:
+class Ship(Sprite):
 
     def __init__(self, screen, game_settings):
         """"Initialise the ship and set its starting position."""
+        super(Ship, self).__init__()
         self.screen = screen
         self.game_settings = game_settings
 
@@ -14,9 +15,10 @@ class Ship:
         self.screen_rect = screen.get_rect()
 
         # Start each new ship at the centre/ bottom of the screen.
-        self.rect.centerx = self.screen_rect.centerx
-        #self.rect.centery = self.screen_rect.centery - this would be centre
-        self.rect.bottom = self.screen_rect.bottom
+        # self.rect.centerx = self.screen_rect.centerx
+        # self.rect.centery = self.screen_rect.centery - this would be centre
+        # self.rect.bottom = self.screen_rect.bottom
+        self.center_ship()
 
         # Store a decimal value for the ship's centre
         self.x_axis = float(self.rect.centerx)
@@ -49,3 +51,6 @@ class Ship:
     def center_ship(self):
         """"Centres the ship on the screen."""
         self.rect.centerx = self.screen_rect.centerx
+        self.rect.bottom = self.screen_rect.bottom
+        self.x_axis = float(self.rect.centerx)
+        self.y_axis = float(self.rect.centery)

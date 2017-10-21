@@ -31,12 +31,12 @@ def run_game():
     gf.create_armada(game_settings, screen, aliens, ship)
 
     while True:
-        gf.check_events(ship, game_settings, screen, bullets, stats, play_button, aliens)
+        gf.check_events(ship, game_settings, screen, bullets, stats, play_button, aliens, scoreboard)
 
         if stats.pilot_alive:
             ship.update()
             gf.update_bullets(bullets, aliens, ship, game_settings, screen, stats, scoreboard)
-            gf.update_aliens(aliens, game_settings, ship, stats, screen, bullets)
+            gf.update_aliens(aliens, game_settings, ship, stats, screen, bullets, scoreboard)
 
         gf.update_screen(game_settings, screen, ship, bullets, aliens, stats, play_button, scoreboard)
 
